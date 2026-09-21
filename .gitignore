@@ -1,1 +1,26 @@
+# macOS
 .DS_Store
+
+# Build output
+**/target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code personal settings
+.vscode/
+
+# Eclipse / Spring Tool Suite
+.classpath
+.project
+.settings/
+.factorypath
+
+# Logs
+*.log
+
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
