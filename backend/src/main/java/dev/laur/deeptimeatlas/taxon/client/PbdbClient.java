@@ -3,6 +3,7 @@ package dev.laur.deeptimeatlas.taxon.client;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import dev.laur.deeptimeatlas.taxon.client.dto.PbdbOccurrenceListResponse;
 import dev.laur.deeptimeatlas.taxon.client.dto.PbdbTaxonSearchResponse;
 
 
@@ -17,15 +18,33 @@ public class PbdbClient {
     }
     
     public PbdbTaxonSearchResponse searchTaxa(String name) {
-    return restClient.get()
-            .uri(uriBuilder -> uriBuilder
-                    .path("/taxa/auto.json")
-                    .queryParam("name", name)
-                    .queryParam("limit", 10)
-                    .queryParam("vocab", "pbdb")
-                    .build())
-            .retrieve()
-            .body(PbdbTaxonSearchResponse.class);
-}
+            return restClient.get()
+                            .uri(uriBuilder -> uriBuilder
+                                            .path("/taxa/auto.json")
+                                            .queryParam("name", name)
+                                            .queryParam("limit", 10)
+                                            .queryParam("vocab", "pbdb")
+                                            .build())
+                            .retrieve()
+                            .body(PbdbTaxonSearchResponse.class);
+
+        }
+        
+    
+        public PbdbOccurrenceListResponse getOccurrences(String taxonName) {
+                return restClient.get()
+                                .uri(uriBuilder -> uriBuilder
+                                                .path("/occs/list.json")
+                                                .queryParam("base_name", taxonName)
+                                                .queryParam("show", "coords,loc")
+                                                .queryParam("limit", 100)
+                                                .queryParam("vocab", "pbdb")
+                                                .build())
+                                .retrieve()
+                                .body(PbdbOccurrenceListResponse.class);
+
+        }
+        
+        
     
 }
