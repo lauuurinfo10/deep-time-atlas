@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import dev.laur.deeptimeatlas.taxon.client.exception.PbdbServiceUnavailableException;
 
+import dev.laur.deeptimeatlas.taxon.exception.ReferenceNotFoundException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -30,4 +32,18 @@ public class GlobalExceptionHandler {
 
         return problem;
     }
+
+    @ExceptionHandler(ReferenceNotFoundException.class)
+public ProblemDetail handleReferenceNotFound(
+        ReferenceNotFoundException exception
+) {
+    ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+            HttpStatus.NOT_FOUND,
+            exception.getMessage()
+    );
+
+    problem.setTitle("Bibliographic reference not found");
+
+    return problem;
+   }
 }

@@ -6,18 +6,22 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import dev.laur.deeptimeatlas.taxon.client.PbdbClient;
-import dev.laur.deeptimeatlas.taxon.client.dto.PbdbTaxonRecord;
-import dev.laur.deeptimeatlas.taxon.client.dto.PbdbTaxonSearchResponse;
-import dev.laur.deeptimeatlas.taxon.dto.TaxonSearchResult;
-
 import dev.laur.deeptimeatlas.taxon.client.dto.PbdbOccurrenceListResponse;
 import dev.laur.deeptimeatlas.taxon.client.dto.PbdbOccurrenceRecord;
+import dev.laur.deeptimeatlas.taxon.client.dto.PbdbReferenceRecord;
+import dev.laur.deeptimeatlas.taxon.client.dto.PbdbReferenceResponse;
+import dev.laur.deeptimeatlas.taxon.client.dto.PbdbTaxonRecord;
+import dev.laur.deeptimeatlas.taxon.client.dto.PbdbTaxonSearchResponse;
+import dev.laur.deeptimeatlas.taxon.dto.BibliographicReferenceResult;
 import dev.laur.deeptimeatlas.taxon.dto.FossilOccurrenceResult;
+import dev.laur.deeptimeatlas.taxon.dto.TaxonSearchResult;
+import dev.laur.deeptimeatlas.taxon.exception.ReferenceNotFoundException;
 
 @Service
 public class TaxonService {
 
-       private final PbdbClient pbdbClient;
+    private static final String PBDB_REFERENCE_URL = "https://paleobiodb.org/classic/displayReference?reference_no=";
+    private final PbdbClient pbdbClient;
 
     public TaxonService(PbdbClient pbdbClient) {
         this.pbdbClient = pbdbClient;
@@ -44,7 +48,6 @@ public class TaxonService {
         return results;
     }
 
-    
     public List<FossilOccurrenceResult> getOccurrences(String taxonName) {
         PbdbOccurrenceListResponse response = pbdbClient.getOccurrences(taxonName);
 
@@ -79,4 +82,34 @@ public class TaxonService {
         return results;
 
     }
+
+    public BibliographicReferenceResult getReference(Long referenceId) {
+        PbdbReferenceResponse response
+                = pbdbClient.getReference(referenceId);
+
+        if (response == null
+                || response.records() == null
+                || response.records().isEmpty()) {
+            throw new ReferenceNotFoundException(referenceId);
+        }
+
+        PbdbReferenceRecord pbdbRecord
+                = response.records().getFirst();
+
+        String sourceUrl
+                = PBDB_REFERENCE_URL + pbdbRecord.referenceId();
+
+        return new BibliographicReferenceResult(
+                pbdbRecord.referenceId(),
+                pbdbRecord.title(),
+                pbdbRecord.publicationYear(),
+                pbdbRecord.publicationType(),
+                pbdbRecord.publicationTitle(),
+                pbdbRecord.formattedCitation(),
+                pbdbRecord.language(),
+                pbdbRecord.doi(),
+                sourceUrl
+        );
+    }
+
 }

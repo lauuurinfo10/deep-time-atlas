@@ -1,11 +1,15 @@
 package dev.laur.deeptimeatlas.taxon.client;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import dev.laur.deeptimeatlas.taxon.client.dto.PbdbOccurrenceListResponse;
+import dev.laur.deeptimeatlas.taxon.client.dto.PbdbReferenceResponse;
 import dev.laur.deeptimeatlas.taxon.client.dto.PbdbTaxonSearchResponse;
 import dev.laur.deeptimeatlas.taxon.client.exception.PbdbServiceUnavailableException;
 
@@ -55,9 +59,34 @@ public class PbdbClient {
                 | HttpServerErrorException exception) {
             throw new PbdbServiceUnavailableException(
                     "Paleobiology Database is temporarily unavailable",
-                    exception
-            );
+                    exception);
         }
     }
 
+    public PbdbReferenceResponse getReference(Long referenceId) {
+    try {
+        return restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/refs/single.json")
+                        .queryParam("id", referenceId)
+                        .queryParam("show", "both")
+                        .queryParam("vocab", "pbdb")
+                        .build())
+                .retrieve()
+                .body(PbdbReferenceResponse.class);
+    } catch (HttpClientErrorException.NotFound exception) {
+        return new PbdbReferenceResponse(
+                null,
+                List.of()
+        );
+    } catch (
+            ResourceAccessException |
+            HttpServerErrorException exception
+    ) {
+        throw new PbdbServiceUnavailableException(
+                "Paleobiology Database is temporarily unavailable",
+                exception
+        );
+    }
+}
 }
