@@ -137,30 +137,30 @@ public class TaxonServiceTest {
     
 
     @Test
-void shouldThrowExceptionWhenReferenceDoesNotExist() {
-    PbdbClient pbdbClient = mock(PbdbClient.class);
-    TaxonService taxonService = new TaxonService(pbdbClient);
+    void shouldThrowExceptionWhenReferenceDoesNotExist() {
+            PbdbClient pbdbClient = mock(PbdbClient.class);
+            TaxonService taxonService = new TaxonService(pbdbClient);
 
-    PbdbReferenceResponse emptyResponse =
-            new PbdbReferenceResponse(
-                    0.0001,
-                    List.of()
-            );
+            PbdbReferenceResponse emptyResponse = new PbdbReferenceResponse(
+                            0.0001,
+                            List.of());
 
-    when(pbdbClient.getReference(999999L))
-            .thenReturn(emptyResponse);
+            when(pbdbClient.getReference(999999L))
+                            .thenReturn(emptyResponse);
 
-    ReferenceNotFoundException exception = assertThrows(
-            ReferenceNotFoundException.class,
-            () -> taxonService.getReference(999999L)
-    );
+            ReferenceNotFoundException exception = assertThrows(
+                            ReferenceNotFoundException.class,
+                            () -> taxonService.getReference(999999L));
 
-    assertEquals(
-            "Bibliographic reference not found: 999999",
-            exception.getMessage()
-    );
+            assertEquals(
+                            "Bibliographic reference not found: 999999",
+                            exception.getMessage());
 
-    verify(pbdbClient).getReference(999999L);
-}
+            verify(pbdbClient).getReference(999999L);
+    }
+
+
+
+    
 
 }
