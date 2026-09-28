@@ -75,7 +75,7 @@ class TaxonControllerTest {
                 "stated in text",
                 "4");
 
-        when(taxonService.getOccurrences("Tyrannosaurus"))
+        when(taxonService.getOccurrences("Tyrannosaurus",null))
                 .thenReturn(List.of(occurrence));
 
         mockMvc.perform(
@@ -96,31 +96,60 @@ class TaxonControllerTest {
                         .value(51.906399))
                 .andExpect(jsonPath("$[0].region").value("Alberta"));
 
-        verify(taxonService).getOccurrences("Tyrannosaurus");
+        verify(taxonService).getOccurrences("Tyrannosaurus",null);
     }
 
     @Test
     void shouldReturnServiceUnavailableWhenPbdbFails() throws Exception {
-        PbdbServiceUnavailableException exception
-                = new PbdbServiceUnavailableException(
-                        "Paleobiology Database is temporarily unavailable",
-                        new RuntimeException("Connection failed")
-                );
+            PbdbServiceUnavailableException exception = new PbdbServiceUnavailableException(
+                            "Paleobiology Database is temporarily unavailable",
+                            new RuntimeException("Connection failed"));
 
-        when(taxonService.search("Tyrannosaurus"))
-                .thenThrow(exception);
+            when(taxonService.search("Tyrannosaurus"))
+                            .thenThrow(exception);
 
-        mockMvc.perform(
-                get("/api/taxa/search")
-                        .param("name", "Tyrannosaurus")
-        )
-                .andExpect(status().isServiceUnavailable())
-                .andExpect(jsonPath("$.title")
-                        .value("External service unavailable"))
-                .andExpect(jsonPath("$.status").value(503))
-                .andExpect(jsonPath("$.detail")
-                        .value(
-                                "Paleobiology Database is temporarily unavailable"
-                        ));
+            mockMvc.perform(
+                            get("/api/taxa/search")
+                                            .param("name", "Tyrannosaurus"))
+                            .andExpect(status().isServiceUnavailable())
+                            .andExpect(jsonPath("$.title")
+                                            .value("External service unavailable"))
+                            .andExpect(jsonPath("$.status").value(503))
+                            .andExpect(jsonPath("$.detail")
+                                            .value(
+                                                            "Paleobiology Database is temporarily unavailable"));
     }
+    
+
+    @Test
+    void shouldPassIntervalFilterToService() throws Exception {
+            when(taxonService.getOccurrences(
+                            "Tyrannosaurus",
+                            "Maastrichtian"))
+                            .thenReturn(List.of());
+
+            mockMvc.perform(
+                            get(
+                                            "/api/taxa/{name}/occurrences",
+                                            "Tyrannosaurus")
+                                            .param("interval", "Maastrichtian"))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$").isArray())
+                            .andExpect(jsonPath("$").isEmpty());
+
+            verify(taxonService).getOccurrences(
+                            "Tyrannosaurus",
+                            "Maastrichtian");
+    }
+
+
+    @Test
+void shouldRejectTooShortInterval() throws Exception {
+    mockMvc.perform(
+            get(
+                    "/api/taxa/{name}/occurrences",
+                    "Tyrannosaurus")
+                    .param("interval", "M"))
+            .andExpect(status().isBadRequest());
+}
 }

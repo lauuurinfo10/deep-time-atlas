@@ -32,10 +32,17 @@ public class TaxonController {
 
     @GetMapping("/{name}/occurrences")
     public List<FossilOccurrenceResult> getOccurrences(
-            @PathVariable("name") @NotBlank(message = "Taxon name must not be blank") @Size(min = 3, max = 100, message = "Taxon name must contain between 3 and 100 characters") String name) {
-        return taxonService.getOccurrences(name);
+        @PathVariable("name")
+        @NotBlank(message = "Taxon name must not be blank")
+        @Size(min = 3, max = 100, message = "Taxon name must contain between 3 and 100 characters")
+        String name,
 
-    }
+        @RequestParam(name = "interval", required = false)
+        @Size(min = 2, max = 100, message = "Interval must contain between 2 and 100 characters")
+        String interval) {
+
+    return taxonService.getOccurrences(name, interval);
+}
 
     
 

@@ -48,8 +48,8 @@ public class TaxonService {
         return results;
     }
 
-    public List<FossilOccurrenceResult> getOccurrences(String taxonName) {
-        PbdbOccurrenceListResponse response = pbdbClient.getOccurrences(taxonName);
+    public List<FossilOccurrenceResult> getOccurrences(String taxonName,String interval) {
+        PbdbOccurrenceListResponse response = pbdbClient.getOccurrences(taxonName, interval);
 
         List<FossilOccurrenceResult> results = new ArrayList<>();
 

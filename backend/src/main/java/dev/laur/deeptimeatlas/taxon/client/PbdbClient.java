@@ -7,6 +7,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriBuilder;
 
 import dev.laur.deeptimeatlas.taxon.client.dto.PbdbOccurrenceListResponse;
 import dev.laur.deeptimeatlas.taxon.client.dto.PbdbReferenceResponse;
@@ -43,25 +44,35 @@ public class PbdbClient {
 
     }
 
-    public PbdbOccurrenceListResponse getOccurrences(String taxonName) {
-        try {
-            return restClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                    .path("/occs/list.json")
-                    .queryParam("base_name", taxonName)
-                    .queryParam("show", "coords,loc")
-                    .queryParam("limit", 100)
-                    .queryParam("vocab", "pbdb")
-                    .build())
-                    .retrieve()
-                    .body(PbdbOccurrenceListResponse.class);
-        } catch (ResourceAccessException
-                | HttpServerErrorException exception) {
-            throw new PbdbServiceUnavailableException(
-                    "Paleobiology Database is temporarily unavailable",
-                    exception);
-        }
+    public PbdbOccurrenceListResponse getOccurrences(
+        String taxonName,
+        String interval) {
+
+    try {
+        return restClient.get()
+                .uri(uriBuilder -> {
+                    UriBuilder builder = uriBuilder
+                            .path("/occs/list.json")
+                            .queryParam("base_name", taxonName)
+                            .queryParam("show", "coords,loc")
+                            .queryParam("limit", 100)
+                            .queryParam("vocab", "pbdb");
+
+                    if (interval != null && !interval.isBlank()) {
+                        builder.queryParam("interval", interval);
+                    }
+
+                    return builder.build();
+                })
+                .retrieve()
+                .body(PbdbOccurrenceListResponse.class);
+
+    } catch (ResourceAccessException | HttpServerErrorException exception) {
+        throw new PbdbServiceUnavailableException(
+                "Paleobiology Database is temporarily unavailable",
+                exception);
     }
+}
 
     public PbdbReferenceResponse getReference(Long referenceId) {
     try {

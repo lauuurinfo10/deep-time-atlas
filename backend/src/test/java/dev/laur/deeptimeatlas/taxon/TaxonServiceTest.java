@@ -79,10 +79,10 @@ public class TaxonServiceTest {
                 0.00732,
                 List.of(pbdbRecord));
 
-        when(pbdbClient.getOccurrences("Tyrannosaurus"))
+        when(pbdbClient.getOccurrences("Tyrannosaurus",null))
                 .thenReturn(response);
 
-        List<FossilOccurrenceResult> results = taxonService.getOccurrences("Tyrannosaurus");
+        List<FossilOccurrenceResult> results = taxonService.getOccurrences("Tyrannosaurus",null);
 
         assertEquals(1, results.size());
         assertEquals(139292L, results.getFirst().id());
@@ -94,7 +94,7 @@ public class TaxonServiceTest {
         assertEquals(51.906399, results.getFirst().latitude());
         assertEquals("Alberta", results.getFirst().region());
 
-        verify(pbdbClient).getOccurrences("Tyrannosaurus");
+        verify(pbdbClient).getOccurrences("Tyrannosaurus",null);
     }
 
     @Test
@@ -158,6 +158,34 @@ public class TaxonServiceTest {
 
             verify(pbdbClient).getReference(999999L);
     }
+
+
+    @Test
+void shouldPassIntervalFilterToPbdbClient() {
+    PbdbClient pbdbClient = mock(PbdbClient.class);
+    TaxonService taxonService = new TaxonService(pbdbClient);
+
+    PbdbOccurrenceListResponse response =
+            new PbdbOccurrenceListResponse(
+                    0.001,
+                    List.of());
+
+    when(pbdbClient.getOccurrences(
+            "Tyrannosaurus",
+            "Maastrichtian"))
+            .thenReturn(response);
+
+    List<FossilOccurrenceResult> results =
+            taxonService.getOccurrences(
+                    "Tyrannosaurus",
+                    "Maastrichtian");
+
+    assertEquals(0, results.size());
+
+    verify(pbdbClient).getOccurrences(
+            "Tyrannosaurus",
+            "Maastrichtian");
+}
 
 
 
