@@ -1,0 +1,336 @@
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: min(760px, 88svh);
+  min-height: 600px;
+  color: #ffffff;
+  background-image: url("/deep-time-hero.png");
+  background-position: center;
+  background-size: cover;
+  isolation: isolate;
+}
+
+.hero::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background: rgba(5, 18, 20, 0.42);
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 24px 0;
+}
+
+.brand {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.data-source {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.data-source:hover {
+  color: #dcefe5;
+}
+
+.hero-content {
+  align-self: center;
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  max-width: 720px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 68px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.32);
+}
+
+.hero-description {
+  max-width: 590px;
+  margin: 22px 0 30px;
+  font-size: 19px;
+  line-height: 1.55;
+  color: #f3f6f2;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+
+.taxon-search {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  width: min(650px, 100%);
+  min-height: 60px;
+  padding: 7px 8px 7px 18px;
+  color: #17201d;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 6px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+}
+
+.taxon-search:focus-within {
+  outline: 3px solid rgba(124, 202, 166, 0.72);
+  outline-offset: 3px;
+}
+
+.taxon-search input {
+  min-width: 0;
+  padding: 10px 0;
+  color: #17201d;
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+.taxon-search input::placeholder {
+  color: #6e7773;
+}
+
+.taxon-search button {
+  min-height: 44px;
+  padding: 0 22px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #b94d35;
+  border: 0;
+  border-radius: 5px;
+}
+
+.taxon-search button:hover:not(:disabled) {
+  background: #963d2b;
+}
+
+.taxon-search button:disabled {
+  cursor: not-allowed;
+  background: #9ba19e;
+}
+
+.scroll-link {
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 24px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+}
+
+.scroll-link:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.explorer {
+  min-height: 360px;
+  padding: 72px max(24px, calc((100% - 1180px) / 2));
+  color: #17201d;
+  background: #f4f5f0;
+}
+
+.explorer .eyebrow {
+  color: #52705f;
+}
+
+.explorer h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 38px;
+  letter-spacing: 0;
+}
+
+.explorer-header {
+  display: flex;
+  gap: 24px;
+  align-items: end;
+  justify-content: space-between;
+  padding-bottom: 28px;
+  border-bottom: 1px solid #cdd4cf;
+}
+
+.result-count {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #52705f;
+}
+
+.search-status,
+.search-error {
+  margin: 32px 0 0;
+  font-size: 16px;
+}
+
+.search-status {
+  color: #606b66;
+}
+
+.search-error {
+  color: #9a3027;
+}
+
+.taxon-results {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.taxon-results li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  min-height: 82px;
+  padding: 16px 0;
+  border-bottom: 1px solid #d9ded9;
+}
+
+.taxon-results li > div {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.taxon-results strong {
+  overflow: hidden;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.taxon-results li > div span {
+  color: #627069;
+  text-transform: capitalize;
+}
+
+.taxon-results li > span {
+  font-size: 14px;
+  font-weight: 700;
+  color: #52705f;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+}
+
+@media (max-width: 700px) {
+
+    .explorer-header {
+    align-items: start;
+  }
+
+  .taxon-results li {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .taxon-results li > div {
+    display: grid;
+    gap: 3px;
+  }
+
+  .hero {
+    height: 84svh;
+    min-height: 560px;
+    background-position: 62% center;
+  }
+
+  .site-header,
+  .hero-content {
+    width: calc(100% - 32px);
+  }
+
+  .site-header {
+    padding-top: 18px;
+  }
+
+  .brand {
+    font-size: 20px;
+  }
+
+  .data-source {
+    font-size: 13px;
+  }
+
+  .hero h1 {
+    font-size: 46px;
+  }
+
+  .hero-description {
+    max-width: 460px;
+    font-size: 17px;
+  }
+
+  .taxon-search {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 10px 14px;
+  }
+
+  .taxon-search button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .explorer {
+    padding-top: 56px;
+  }
+
+  .explorer h2 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero h1 {
+    font-size: 40px;
+  }
+
+  .data-source {
+    font-size: 0;
+  }
+}
