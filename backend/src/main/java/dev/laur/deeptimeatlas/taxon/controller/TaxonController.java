@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.laur.deeptimeatlas.taxon.TaxonService;
 import dev.laur.deeptimeatlas.taxon.dto.FossilOccurrenceResult;
 import dev.laur.deeptimeatlas.taxon.dto.TaxonSearchResult;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -30,8 +32,8 @@ public class TaxonController {
         return taxonService.search(name);
     }
 
-    @GetMapping("/{name}/occurrences")
-    public List<FossilOccurrenceResult> getOccurrences(
+   @GetMapping("/{name}/occurrences")
+public List<FossilOccurrenceResult> getOccurrences(
         @PathVariable("name")
         @NotBlank(message = "Taxon name must not be blank")
         @Size(min = 3, max = 100, message = "Taxon name must contain between 3 and 100 characters")
@@ -39,11 +41,23 @@ public class TaxonController {
 
         @RequestParam(name = "interval", required = false)
         @Size(min = 2, max = 100, message = "Interval must contain between 2 and 100 characters")
-        String interval) {
+        String interval,
 
-    return taxonService.getOccurrences(name, interval);
+        @RequestParam(name = "limit", defaultValue = "100")
+        @Min(value = 1, message = "Limit must be at least 1")
+        @Max(value = 100, message = "Limit must not exceed 100")
+        int limit,
+
+        @RequestParam(name = "offset", defaultValue = "0")
+        @Min(value = 0, message = "Offset must not be negative")
+        int offset) {
+
+    return taxonService.getOccurrences(
+            name,
+            interval,
+            limit,
+            offset);
 }
-
     
 
 }

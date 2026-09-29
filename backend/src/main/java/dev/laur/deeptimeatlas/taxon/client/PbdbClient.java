@@ -46,7 +46,9 @@ public class PbdbClient {
 
     public PbdbOccurrenceListResponse getOccurrences(
         String taxonName,
-        String interval) {
+            String interval
+            , int limit
+            , int offset) {
 
     try {
         return restClient.get()
@@ -55,7 +57,8 @@ public class PbdbClient {
                             .path("/occs/list.json")
                             .queryParam("base_name", taxonName)
                             .queryParam("show", "coords,loc")
-                            .queryParam("limit", 100)
+                            .queryParam("limit", limit)
+                            .queryParam("offset", offset)
                             .queryParam("vocab", "pbdb");
 
                     if (interval != null && !interval.isBlank()) {

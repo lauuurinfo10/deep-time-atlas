@@ -75,7 +75,7 @@ class TaxonControllerTest {
                 "stated in text",
                 "4");
 
-        when(taxonService.getOccurrences("Tyrannosaurus",null))
+        when(taxonService.getOccurrences("Tyrannosaurus",null,100,0))
                 .thenReturn(List.of(occurrence));
 
         mockMvc.perform(
@@ -96,7 +96,7 @@ class TaxonControllerTest {
                         .value(51.906399))
                 .andExpect(jsonPath("$[0].region").value("Alberta"));
 
-        verify(taxonService).getOccurrences("Tyrannosaurus",null);
+        verify(taxonService).getOccurrences("Tyrannosaurus",null,100,0);
     }
 
     @Test
@@ -125,7 +125,9 @@ class TaxonControllerTest {
     void shouldPassIntervalFilterToService() throws Exception {
             when(taxonService.getOccurrences(
                             "Tyrannosaurus",
-                            "Maastrichtian"))
+                            "Maastrichtian",
+                            100,
+                            0))
                             .thenReturn(List.of());
 
             mockMvc.perform(
@@ -139,17 +141,65 @@ class TaxonControllerTest {
 
             verify(taxonService).getOccurrences(
                             "Tyrannosaurus",
-                            "Maastrichtian");
+                            "Maastrichtian",
+                                        100,
+                                        0);
     }
 
 
     @Test
-void shouldRejectTooShortInterval() throws Exception {
+    void shouldRejectTooShortInterval() throws Exception {
+            mockMvc.perform(
+                            get(
+                                            "/api/taxa/{name}/occurrences",
+                                            "Tyrannosaurus")
+                                            .param("interval", "M"))
+                            .andExpect(status().isBadRequest());
+    }
+
+                @Test
+                void shouldPassPaginationParametersToService() throws Exception {
+                        when(taxonService.getOccurrences(
+                                        "Tyrannosaurus",
+                                        null,
+                                        20,
+                                        40))
+                                        .thenReturn(List.of());
+
+                        mockMvc.perform(
+                                        get(
+                                                        "/api/taxa/{name}/occurrences",
+                                                        "Tyrannosaurus")
+                                                        .param("limit", "20")
+                                                        .param("offset", "40"))
+                                        .andExpect(status().isOk())
+                                        .andExpect(jsonPath("$").isArray())
+                                        .andExpect(jsonPath("$").isEmpty());
+
+                        verify(taxonService).getOccurrences(
+                                        "Tyrannosaurus",
+                                        null,
+                                        20,
+                                        40);
+                }
+
+                @Test
+void shouldRejectLimitAboveMaximum() throws Exception {
     mockMvc.perform(
             get(
                     "/api/taxa/{name}/occurrences",
                     "Tyrannosaurus")
-                    .param("interval", "M"))
+                    .param("limit", "101"))
+            .andExpect(status().isBadRequest());
+}
+
+@Test
+void shouldRejectNegativeOffset() throws Exception {
+    mockMvc.perform(
+            get(
+                    "/api/taxa/{name}/occurrences",
+                    "Tyrannosaurus")
+                    .param("offset", "-1"))
             .andExpect(status().isBadRequest());
 }
 }
