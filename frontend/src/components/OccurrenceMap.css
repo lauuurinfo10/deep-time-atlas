@@ -1,0 +1,108 @@
+.occurrence-map {
+  width: 100%;
+  height: 560px;
+  overflow: hidden;
+  background: #dce5df;
+  border: 1px solid #bcc8c0;
+  border-radius: 6px;
+}
+
+.occurrence-map .maplibregl-canvas {
+  cursor: grab;
+}
+
+.occurrence-map .maplibregl-canvas:active {
+  cursor: grabbing;
+}
+
+.map-popup {
+  min-width: 250px;
+  max-height: 390px;
+  overflow-y: auto;
+}
+
+.map-popup h3 {
+  margin: 0 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+.map-popup p {
+  margin: 5px 0;
+  line-height: 1.45;
+  color: #52605a;
+}
+
+.map-popup dl {
+  padding-top: 10px;
+  margin: 12px 0 0;
+  border-top: 1px solid #d9ded9;
+}
+
+.map-popup dl div {
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.map-popup dt {
+  color: #6c7772;
+}
+
+.map-popup dd {
+  margin: 0;
+  font-weight: 700;
+  color: #17201d;
+}
+
+.popup-reference {
+  padding-top: 14px;
+  margin-top: 14px;
+  border-top: 1px solid #d9ded9;
+}
+
+.popup-reference h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.popup-reference a {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 10px;
+  font-weight: 700;
+  color: #28736c;
+}
+
+.popup-reference a:hover {
+  text-decoration: underline;
+}
+
+.popup-reference .popup-error {
+  color: #9a3027;
+}
+
+.popup-reference .reference-id {
+  font-size: 13px;
+  color: #68746e;
+}
+
+.maplibregl-popup-content {
+  padding: 18px;
+  border-radius: 6px;
+  box-shadow: 0 12px 28px rgba(17, 31, 25, 0.22);
+}
+
+@media (max-width: 700px) {
+  .occurrence-map {
+    height: 480px;
+  }
+
+  .map-popup {
+    max-width: 260px;
+  }
+}

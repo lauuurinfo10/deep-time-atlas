@@ -20,7 +20,7 @@ import dev.laur.deeptimeatlas.taxon.exception.ReferenceNotFoundException;
 @Service
 public class TaxonService {
 
-    private static final String PBDB_REFERENCE_URL = "https://paleobiodb.org/classic/displayReference?reference_no=";
+    private static final String PBDB_REFERENCE_URL = "https://paleobiodb.org/data1.2/refs/single.json?id=";
     private final PbdbClient pbdbClient;
 
     public TaxonService(PbdbClient pbdbClient) {

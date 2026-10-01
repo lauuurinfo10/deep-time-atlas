@@ -35,7 +35,7 @@ class ReferenceControllerTest {
                         "D. A. Eberth et al. 2001. Alberta's dinosaurs.",
                         "English",
                         null,
-                        "https://paleobiodb.org/classic/displayReference?reference_no=4218"
+                        "https://paleobiodb.org/data1.2/refs/single.json?id=4218"
                 );
 
         when(taxonService.getReference(4218L))
@@ -56,7 +56,7 @@ class ReferenceControllerTest {
                 .andExpect(jsonPath("$.doi").doesNotExist())
                 .andExpect(jsonPath("$.sourceUrl")
                         .value(
-                                "https://paleobiodb.org/classic/displayReference?reference_no=4218"
+                                "https://paleobiodb.org/data1.2/refs/single.json?id=4218"
                         ));
     }
 

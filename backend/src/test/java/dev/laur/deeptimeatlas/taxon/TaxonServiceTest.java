@@ -129,7 +129,7 @@ public class TaxonServiceTest {
             assertEquals("guidebook", result.publicationType());
             assertEquals("English", result.language());
             assertEquals(
-                            "https://paleobiodb.org/classic/displayReference?reference_no=4218",
+                            "https://paleobiodb.org/data1.2/refs/single.json?id=4218",
                             result.sourceUrl());
 
             verify(pbdbClient).getReference(4218L);
